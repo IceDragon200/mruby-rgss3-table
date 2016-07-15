@@ -30,6 +30,7 @@ module RGSS3
       @ysize = args[1] || 1
       @zsize = args[2] || 1
       @size = @xsize * @ysize * @zsize
+      assert_size
       @data = NArray.int16 @size
     end
 
@@ -42,6 +43,18 @@ module RGSS3
       @zsize = other.zsize
       @size = other.size
       @data = other.data.dup
+    end
+
+    private def assert_non_negative_and_zero(name, value)
+      if value <= 0
+        raise ArgumentError, "expected `#{name}` to be greater than 0"
+      end
+    end
+
+    private def assert_size
+      assert_non_negative_and_zero('xsize', @xsize)
+      assert_non_negative_and_zero('ysize', @ysize)
+      assert_non_negative_and_zero('zsize', @zsize)
     end
 
     private def assert_dimensions(size)
@@ -85,6 +98,7 @@ module RGSS3
       @ysize = args[1] || @ysize
       @zsize = args[2] || @zsize
       @size = @xsize * @ysize * @zsize
+      assert_size
       @data.resize!(@size)
       self
     end
